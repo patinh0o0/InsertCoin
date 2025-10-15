@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>InsertCoin — APKs</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg:#0b0610;
+    --panel:#0f0b14;
+    --neon1:#00f0ff;
+    --neon2:#ff3af0;
+    --accent:#39ff14;
+    --muted:#9a9aa0;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;
+    font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Press Start 2P", sans-serif;
+    background:
+      radial-gradient(1200px 400px at 10% 10%, rgba(0,240,255,0.05), transparent 10%),
+      radial-gradient(900px 300px at 90% 90%, rgba(255,58,240,0.04), transparent 10%),
+      var(--bg);
+    color:#e9e7ee;
+    padding:32px;
+    background-attachment: fixed;
+  }
+
+  header{display:flex;gap:16px;align-items:center;margin-bottom:20px;}
+  .logo{width:84px;height:84px;border-radius:12px;background:linear-gradient(135deg,var(--neon1),var(--neon2));
+    display:flex;align-items:center;justify-content:center;box-shadow:0 6px 30px rgba(57,255,20,0.08), 0 0 24px rgba(0,240,255,0.12), inset 0 -6px 30px rgba(255,58,240,0.08);
+    border:2px solid rgba(255,255,255,0.04);font-family: "Press Start 2P", monospace;font-size:16px;color:#08060b;text-shadow:0 1px 0 rgba(255,255,255,0.2);}
+  h1{margin:0;font-family:"Press Start 2P", monospace;font-size:20px;letter-spacing:1px;color:var(--neon1);
+    text-shadow: 0 0 8px rgba(0,240,255,0.25), 0 0 18px rgba(0,240,255,0.12);}
+  .subtitle{color:var(--muted);font-size:11px;margin-top:6px}
+  main{display:grid;grid-template-columns: 1fr 360px;gap:20px;align-items:start;}
+  .apk-list{background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);border-radius:12px;padding:18px;
+    box-shadow: 0 6px 30px rgba(0,0,0,0.6);border:1px solid rgba(255,255,255,0.03);}
+  .apk-grid{display:grid;grid-template-columns: repeat(auto-fill,minmax(260px,1fr));gap:12px;}
+  .card{background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.0));border-radius:10px;padding:12px;
+    border:1px solid rgba(255,255,255,0.03);box-shadow: 0 8px 20px rgba(0,0,0,0.6);display:flex;flex-direction:column;gap:8px;}
+  .thumb{height:120px;border-radius:8px;background:linear-gradient(135deg, rgba(255,255,255,0.02), rgba(0,0,0,0.2));
+    display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--muted);border:1px dashed rgba(255,255,255,0.03);}
+  .title{font-family:"Press Start 2P";font-size:12px;color:var(--neon2)}
+  .desc{font-size:12px;color:var(--muted);min-height:36px}
+  .meta{display:flex;gap:10px;align-items:center;font-size:12px;color:var(--muted)}
+  .votes{background:rgba(255,255,255,0.02);padding:6px 8px;border-radius:8px;font-weight:700;display:inline-flex;gap:8px;align-items:center;}
+  .actions{display:flex;gap:8px;margin-top:6px}
+  .btn{flex:1;padding:8px 10px;border-radius:9px;border:0;font-family:"Press Start 2P";font-size:11px;cursor:pointer;outline:none;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.5);}
+  .btn-download{background:linear-gradient(90deg,var(--neon1),var(--neon2));color:#04060a;}
+  .btn-comments{background:transparent;border:1px solid rgba(255,255,255,0.03);color:var(--muted);}
+  footer{margin-top:18px;text-align:center;color:var(--muted);font-size:12px;}
+</style>
+</head>
+<body>
+<header><div class="logo">IC</div><div><h1>InsertCoin</h1><div class="subtitle">APKs — Retro • Neón • Pixel</div></div></header>
+<main>
+<section class="apk-list" id="apk-list-section">
+<div style="font-family:'Press Start 2P';font-size:12px;color:var(--neon1)">Catálogo de APKs</div>
+<div class="apk-grid" id="apk-grid"></div>
+<footer><div style="margin-top:14px;color:var(--muted);font-size:12px">
+Los comentarios y votos se guardan solo en tu navegador.</div></footer>
+</section>
+</main>
+<script>
+const STORAGE_KEY='insertcoin_data';
+const defaultData=[{id:'apk1',title:'Super Retro APK',desc:'Ejemplo de APK retro',adfly:'https://adf.ly/',mediafire:'https://www.mediafire.com/',votes:0,comments:[]}];
+function saveData(d){localStorage.setItem(STORAGE_KEY,JSON.stringify(d));}
+function loadData(){const j=localStorage.getItem(STORAGE_KEY);return j?JSON.parse(j):defaultData;}
+let data=loadData();
+const grid=document.getElementById('apk-grid');
+function render(){grid.innerHTML='';data.forEach((a,i)=>{const c=document.createElement('div');c.className='card';c.innerHTML=`<div class='thumb'>IMG</div><div class='title'>${a.title}</div><div class='desc'>${a.desc}</div><div class='meta'><div class='votes'>❤ <span>${a.votes}</span></div></div><div class='actions'><button class='btn btn-download'>DESCARGAR</button><button class='btn btn-comments'>COMENTARIOS</button></div><div class='comments' style='display:none'></div>`;
+const btn=c.querySelector('.btn-download');const com=c.querySelector('.btn-comments');const combox=c.querySelector('.comments');
+btn.onclick=()=>{a.votes++;saveData(data);render();window.open(a.adfly,'_blank');setTimeout(()=>{window.open(a.mediafire,'_blank');},2000);};
+com.onclick=()=>{combox.style.display=combox.style.display==='none'?'block':'none';if(combox.innerHTML===''){const list=document.createElement('div');a.comments.forEach(cm=>{list.innerHTML+=`<div style='font-size:12px;margin:4px 0'>💬 ${cm}</div>`});const inp=document.createElement('input');inp.placeholder='Escribe un comentario';inp.style.width='80%';const send=document.createElement('button');send.textContent='Enviar';send.className='btn btn-download';send.onclick=()=>{if(inp.value.trim()){a.comments.push(inp.value);saveData(data);render();}};combox.append(list,inp,send);}};
+grid.appendChild(c);});}
+render();
+</script>
+</body>
+</html>
